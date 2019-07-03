@@ -1,0 +1,73 @@
+using System;
+using System.Text;
+
+namespace NumberName
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int intNumber;
+            string inputNumber;
+            do
+            {
+                Console.Write("Enter number : ");
+                inputNumber = Console.ReadLine().ToString();
+                intNumber = int.Parse(inputNumber);
+                var name = NumberName(intNumber);
+                Console.WriteLine(name);
+            }
+            while (!(intNumber == 0));
+        }
+
+        public static string NumberName(int intNumber)
+        {
+            int[] numberDigit = new int[4];
+            int first = 0;
+            int ones, hundreds, thousands;
+            StringBuilder sb = new StringBuilder();
+            if (intNumber < 0)
+            {
+                sb.Append("Minus ");
+                intNumber = -intNumber;
+            }
+            string[] numberWord = { "", "One ", "Two ", "Three ", "Four ", "Five ", "Six ", "Seven ", "Eight ", "Nine " };
+
+            numberDigit[0] = intNumber % 1000;
+            numberDigit[1] = intNumber / 1000;
+            numberDigit[2] = intNumber / 1000000;
+            numberDigit[1] = numberDigit[1] - 1000 * numberDigit[2];
+            numberDigit[3] = intNumber / 1000000000;
+            numberDigit[2] = numberDigit[2] - 1000 * numberDigit[3];
+            for (int i = 3; i > 0; i--)
+            {
+                if (numberDigit[i] != 0)
+                {
+                    first = i;
+                    break;
+                }
+            }
+
+            for (int i = first; i >= 0; i--)
+            {
+                if (numberDigit[i] == 0) continue;
+                ones = numberDigit[i] % 10;
+                thousands = numberDigit[i] / 10;
+                hundreds = numberDigit[i] / 100;
+                thousands = thousands - 10 * hundreds;
+                
+                if (ones > 0 || thousands > 0)
+                {
+                    if (thousands == 0)
+                        sb.Append(numberWord[ones]);
+                    else if (thousands == 1)
+                        sb.Append(numberWord[ones]);
+                    else
+                        sb.Append(numberWord[thousands - 2] + numberWord[ones]);
+                }
+                if (i != 0) sb.Append(numberWord[i - 1]);
+            }
+            return sb.ToString().TrimEnd();
+        }
+    }
+}
